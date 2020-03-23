@@ -12,6 +12,6 @@ begin
 end;
 /
 */
-@f500.sql
+@f100.sql
 
 exit
