@@ -1,0 +1,121 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+  id 'java'
+  id 'org.flywaydb.flyway' version '5.1.4'
+  id 'com.palantir.git-version' version '0.12.0-rc2'
+}
+
+//apply plugin: 'org.flywaydb.flyway'
+
+repositories {
+  maven {
+    url "https://repo1.maven.org/maven2/"
+  }
+  //mavenCentral()
+}
+
+dependencies {
+  compile ("com.oracle.ojdbc:ojdbc8:19.3.0.0")
+}
+
+description = """\
+Build script for TML applications.
+
+Usage:
+gradlew [-P<property name>=<property value>...] [taskName]
+
+Properties:
+  env        Environment type for which a command will be applied (dev|qa|prd) [default: dev].
+"""
+
+project.ext.env = (project.findProperty('env') ?: 'dev').toLowerCase()
+println "Environment: ${project.ext.env}"
+
+project.version getVersion()
+println "Version: ${project.version}"
+
+def getTns() {
+  return project.getProperty("${project.ext.env}.oracle.tns")
+}
+
+def getJdbcUrl() {
+  return "jdbc:oracle:thin:@${getTns()}"
+}
+
+def getPassword() {
+  return project.getProperty("${project.ext.env}.oracle.password")
+}
+
+def getVersion() {
+  def version = gitVersion(prefix:'WORKFLOW@')
+  def details = versionDetails()
+
+  // if(project.ext.env == 'prd' && !details.isCleanTag) {
+  //   throw new InvalidUserDataException("Deploy only clean tagged versions to production!")
+  // }
+
+  return version
+}
+
+flyway {
+  url = getJdbcUrl()
+  user = 'WORKFLOW'
+  password = getPassword()
+  locations = ['filesystem:database']
+  sqlMigrationSuffixes = ['.sql', '.pck', '.prc', '.fnc', '.trg', '.tps', '.jsp']
+  cleanDisabled = project.ext.env == 'dev' ? false : true
+}
+
+task copyApex(type: Copy){
+  dependsOn 'clean'
+  from 'application'
+  into "${buildDir}/application"
+  filter(ReplaceTokens, tokens: ["VERSION-DEV": project.version])
+}
+
+task importApex {
+  group 'Apex'
+  description 'Import TML application into Apex'
+  dependsOn 'copyApex'
+  mustRunAfter 'flywayMigrate'
+
+  doLast {
+    if(project.ext.env == 'dev') {
+       throw new InvalidUserDataException("Do not import Apex app on DEV!")
+    }
+
+    def dir = new File("${buildDir}/application")
+    if(!dir.exists()) {
+      throw new GradleScriptException("Working directory ${dir.absolutePath} doesn't exist.")
+    }
+
+    project.exec {
+      workingDir dir.absolutePath
+      commandLine 'sql', '-L', "WORKFLOW/${getPassword()}@${getTns()}", '@import.sql'
+    }
+  }
+}
+
+task exportApex {
+  group 'Apex'
+  description 'Export TML application into Git working directory'
+
+  doLast {
+    def dir = new File("application")
+    if(!dir.exists()) {
+      throw new GradleScriptException("Working directory ${dir.absolutePath} doesn't exist.")
+    }
+
+    project.exec {
+      workingDir dir.absolutePath
+      commandLine 'sql', '-L', "WORKFLOW/${getPassword()}@${getTns()}", '@export.sql'
+    }
+  }
+}
+
+task deploy {
+  group 'Deployment'
+  description 'Migrate database and import Apex application.'
+  dependsOn 'flywayMigrate', 'importApex'
+}
