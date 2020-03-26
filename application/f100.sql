@@ -27,21 +27,21 @@ prompt APPLICATION 100 - Declarative Workflow
 -- Application Export:
 --   Application:     100
 --   Name:            Declarative Workflow
---   Date and Time:   20:24 Środa Marzec 25, 2020
+--   Date and Time:   20:37 Czwartek Marzec 26, 2020
 --   Exported By:     WORKFLOW
 --   Flashback:       0
 --   Export Type:     Application Export
---     Pages:                      3
+--     Pages:                      5
 --       Items:                    3
 --       Processes:                4
---       Regions:                  3
+--       Regions:                  6
 --       Buttons:                  1
 --     Shared Components:
 --       Logic:
 --       Navigation:
---         Lists:                  2
+--         Lists:                  3
 --         Breadcrumbs:            1
---           Entries:              1
+--           Entries:              3
 --       Security:
 --         Authentication:         1
 --         Authorization:          1
@@ -114,7 +114,7 @@ wwv_flow_api.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'Declarative Workflow'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200325202419'
+,p_last_upd_yyyymmddhh24miss=>'20200326203529'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -135,6 +135,14 @@ wwv_flow_api.create_list_item(
 ,p_list_item_link_target=>'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:'
 ,p_list_item_icon=>'fa-home'
 ,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_api.create_list_item(
+ p_id=>wwv_flow_api.id(3300424122827537)
+,p_list_item_display_sequence=>20
+,p_list_item_link_text=>'Administration'
+,p_list_item_link_target=>'f?p=&APP_ID.:10000:&SESSION.::&DEBUG.'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'10000'
 );
 end;
 /
@@ -169,6 +177,23 @@ wwv_flow_api.create_list_item(
 ,p_list_item_link_target=>'&LOGOUT_URL.'
 ,p_list_item_icon=>'fa-sign-out'
 ,p_parent_list_item_id=>wwv_flow_api.id(2754220718789812)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+end;
+/
+prompt --application/shared_components/navigation/lists/administration
+begin
+wwv_flow_api.create_list(
+ p_id=>wwv_flow_api.id(3600160227838428)
+,p_name=>'Administration'
+,p_list_status=>'PUBLIC'
+);
+wwv_flow_api.create_list_item(
+ p_id=>wwv_flow_api.id(3600306227838448)
+,p_list_item_display_sequence=>10
+,p_list_item_link_text=>'Workflow Configuration'
+,p_list_item_link_target=>'f?p=&APP_ID.:10100:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-gears'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
 end;
@@ -340,6 +365,18 @@ wwv_flow_api.create_menu_option(
 ,p_short_name=>'Home'
 ,p_link=>'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.'
 ,p_page_id=>1
+);
+wwv_flow_api.create_menu_option(
+ p_id=>wwv_flow_api.id(3301384342827542)
+,p_short_name=>'Administration'
+,p_link=>'f?p=&APP_ID.:10000:&SESSION.'
+,p_page_id=>10000
+);
+wwv_flow_api.create_menu_option(
+ p_id=>wwv_flow_api.id(3500899757833226)
+,p_short_name=>'Workflow Configuration'
+,p_link=>'f?p=&APP_ID.:10100:&SESSION.'
+,p_page_id=>10100
 );
 end;
 /
@@ -4674,7 +4711,7 @@ wwv_flow_api.create_theme_style(
  p_id=>wwv_flow_api.id(2722313581789687)
 ,p_theme_id=>42
 ,p_name=>'Vita'
-,p_is_current=>true
+,p_is_current=>false
 ,p_is_public=>true
 ,p_is_accessible=>true
 ,p_theme_roller_input_file_urls=>'#THEME_IMAGES#less/theme/Vita.less'
@@ -4686,7 +4723,7 @@ wwv_flow_api.create_theme_style(
  p_id=>wwv_flow_api.id(2722558495789687)
 ,p_theme_id=>42
 ,p_name=>'Vita - Dark'
-,p_is_current=>false
+,p_is_current=>true
 ,p_is_public=>true
 ,p_is_accessible=>false
 ,p_theme_roller_input_file_urls=>'#THEME_IMAGES#less/theme/Vita-Dark.less'
@@ -10730,6 +10767,72 @@ wwv_flow_api.create_page_process(
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 ':P9999_USERNAME := apex_authentication.get_login_username_cookie;',
 ':P9999_REMEMBER := case when :P9999_USERNAME is not null then ''Y'' end;'))
+);
+end;
+/
+prompt --application/pages/page_10000
+begin
+wwv_flow_api.create_page(
+ p_id=>10000
+,p_user_interface_id=>wwv_flow_api.id(2742820919789721)
+,p_name=>'Administration'
+,p_step_title=>'Administration'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_last_updated_by=>'WSOWA'
+,p_last_upd_yyyymmddhh24miss=>'20200326203529'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(3300955460827542)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(2669086536789639)
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_api.id(2605658209789589)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>wwv_flow_api.id(2721789776789679)
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(3600744192839301)
+,p_plug_name=>'Main Menu'
+,p_region_template_options=>'#DEFAULT#:t-Region--noUI:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:u-colors:t-Cards--featured t-Cards--block force-fa-lg:t-Cards--displayIcons:t-Cards--cols:t-Cards--iconsRounded:t-Cards--animColorFill'
+,p_plug_template=>wwv_flow_api.id(2659699170789634)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_list_id=>wwv_flow_api.id(3600160227838428)
+,p_plug_source_type=>'NATIVE_LIST'
+,p_list_template_id=>wwv_flow_api.id(2709780095789670)
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+);
+end;
+/
+prompt --application/pages/page_10100
+begin
+wwv_flow_api.create_page(
+ p_id=>10100
+,p_user_interface_id=>wwv_flow_api.id(2742820919789721)
+,p_name=>'Workflow Configuration'
+,p_step_title=>'Workflow Configuration'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_last_updated_by=>'WSOWA'
+,p_last_upd_yyyymmddhh24miss=>'20200326202744'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(3500477792833226)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(2669086536789639)
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_api.id(2605658209789589)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>wwv_flow_api.id(2721789776789679)
 );
 end;
 /
