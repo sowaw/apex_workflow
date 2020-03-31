@@ -1,0 +1,1 @@
+create index APP_WORKFLOW_DICTIONARY_FK on APP_WORKFLOW_DICTIONARY (app_workflow_id);

@@ -1,0 +1,1 @@
+alter table APP_WORKFLOW_DICTIONARY add app_workflow_id number not null;
