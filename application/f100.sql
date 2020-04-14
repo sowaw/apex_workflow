@@ -27,12 +27,12 @@ prompt APPLICATION 100 - Declarative Workflow
 -- Application Export:
 --   Application:     100
 --   Name:            Declarative Workflow
---   Date and Time:   21:13 Wtorek Kwiecień 7, 2020
+--   Date and Time:   21:11 Wtorek Kwiecień 14, 2020
 --   Exported By:     WORKFLOW
 --   Flashback:       0
 --   Export Type:     Application Export
 --     Pages:                     12
---       Items:                   31
+--       Items:                   32
 --       Processes:               22
 --       Regions:                 25
 --       Buttons:                 21
@@ -117,7 +117,7 @@ wwv_flow_api.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'Declarative Workflow'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200407211255'
+,p_last_upd_yyyymmddhh24miss=>'20200414210835'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -10875,7 +10875,7 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200407211255'
+,p_last_upd_yyyymmddhh24miss=>'20200414210835'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(7903952336165339)
@@ -10888,15 +10888,19 @@ wwv_flow_api.create_page_plug(
 ,p_plug_display_point=>'BODY'
 ,p_query_type=>'SQL'
 ,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'select m.id,',
+'select ''<a href="'' || apex_util.prepare_url(''f?p=&APP_ID.:'' ||',
+'                                            app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) ||',
+'                                            '':&APP_SESSION.::::P'' ||app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) || ''_ID:'' || m.id) ||',
+'       ''"><img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-page.png" class="apex-edit-page report-link-button" title="Edit" alt="Edit">',
+'       </a>'' as link,',
+'       m.id,',
 '       m.description,',
 '       m.status,',
 '       m.create_user,',
 '       m.create_date,',
 '       m.update_user,',
 '       m.update_date',
-'  from masterdata m;',
-''))
+'  from masterdata m;'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_prn_content_disposition=>'ATTACHMENT'
@@ -10935,11 +10939,9 @@ wwv_flow_api.create_worksheet(
 ,p_pagination_type=>'ROWS_X_TO_Y'
 ,p_pagination_display_pos=>'BOTTOM_RIGHT'
 ,p_report_list_mode=>'TABS'
-,p_show_detail_link=>'C'
+,p_show_detail_link=>'N'
 ,p_show_notify=>'Y'
 ,p_download_formats=>'CSV:HTML:EMAIL:XLS:PDF:RTF'
-,p_detail_link=>'f?p=&APP_ID.:102:&SESSION.::&DEBUG.:RP:P102_ID:#ID#'
-,p_detail_link_text=>'<img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-pencil.png" class="apex-edit-pencil" alt="">'
 ,p_owner=>'WSOWA'
 ,p_internal_uid=>7904055597165340
 );
@@ -10950,7 +10952,7 @@ wwv_flow_api.create_worksheet_column(
 ,p_column_identifier=>'A'
 ,p_column_label=>'Id'
 ,p_column_type=>'NUMBER'
-,p_column_alignment=>'RIGHT'
+,p_display_text_as=>'HIDDEN'
 );
 wwv_flow_api.create_worksheet_column(
  p_id=>wwv_flow_api.id(10201214876936712)
@@ -11004,6 +11006,16 @@ wwv_flow_api.create_worksheet_column(
 ,p_column_alignment=>'CENTER'
 ,p_tz_dependent=>'N'
 );
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(10201795407936717)
+,p_db_column_name=>'LINK'
+,p_display_order=>80
+,p_column_identifier=>'H'
+,p_column_label=>'Edit'
+,p_column_type=>'STRING'
+,p_display_text_as=>'WITHOUT_MODIFICATION'
+,p_column_alignment=>'CENTER'
+);
 wwv_flow_api.create_worksheet_rpt(
  p_id=>wwv_flow_api.id(10103027529897354)
 ,p_application_user=>'APXWS_DEFAULT'
@@ -11011,7 +11023,7 @@ wwv_flow_api.create_worksheet_rpt(
 ,p_report_alias=>'101031'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_report_columns=>'ID:DESCRIPTION:STATUS:CREATE_USER:CREATE_DATE:UPDATE_USER:UPDATE_DATE:'
+,p_report_columns=>'LINK:DESCRIPTION:STATUS:CREATE_USER:CREATE_DATE:UPDATE_USER:UPDATE_DATE:'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(10001429402822009)
@@ -11045,6 +11057,8 @@ wwv_flow_api.create_page_branch(
 ,p_branch_point=>'AFTER_PROCESSING'
 ,p_branch_type=>'REDIRECT_URL'
 ,p_branch_sequence=>20
+,p_branch_condition_type=>'ITEM_IS_NOT_NULL'
+,p_branch_condition=>'P0_NEXT_PAGE'
 );
 wwv_flow_api.create_page_process(
  p_id=>wwv_flow_api.id(10103806106901860)
@@ -11068,7 +11082,7 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200407204617'
+,p_last_upd_yyyymmddhh24miss=>'20200414210806'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(7903700725165337)
@@ -11962,7 +11976,7 @@ wwv_flow_api.create_page(
 ,p_group_id=>wwv_flow_api.id(2746076255789759)
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200407210227'
+,p_last_upd_yyyymmddhh24miss=>'20200414202014'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(3605586496839349)
@@ -12671,6 +12685,7 @@ wwv_flow_api.create_page_plug(
 '       s.next_page,',
 '       s.prev_step_id,',
 '       s.app_workflow_id,',
+'       s.edit_page,',
 '       s.create_user,',
 '       s.create_date,',
 '       s.update_user,',
@@ -12835,6 +12850,17 @@ wwv_flow_api.create_worksheet_column(
 ,p_column_alignment=>'CENTER'
 ,p_tz_dependent=>'N'
 );
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(10201549054936715)
+,p_db_column_name=>'EDIT_PAGE'
+,p_display_order=>120
+,p_column_identifier=>'L'
+,p_column_label=>'Edit Page'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_rpt_named_lov=>wwv_flow_api.id(7800167041029042)
+,p_rpt_show_filter_lov=>'1'
+);
 wwv_flow_api.create_worksheet_rpt(
  p_id=>wwv_flow_api.id(7908973270190964)
 ,p_application_user=>'APXWS_DEFAULT'
@@ -12842,7 +12868,7 @@ wwv_flow_api.create_worksheet_rpt(
 ,p_report_alias=>'79090'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_report_columns=>'ID:ACTION:REQUEST:STATUS:NEXT_PAGE:PREV_STEP_ID:APP_WORKFLOW_ID:CREATE_USER:CREATE_DATE:UPDATE_USER:UPDATE_DATE'
+,p_report_columns=>'ACTION:REQUEST:STATUS:NEXT_PAGE:EDIT_PAGE:PREV_STEP_ID:CREATE_USER:CREATE_DATE:UPDATE_USER:UPDATE_DATE:'
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(6901830969297109)
@@ -13015,6 +13041,9 @@ wwv_flow_api.create_page_da_event(
 ,p_bind_type=>'bind'
 ,p_bind_event_type=>'apexafterclosedialog'
 );
+end;
+/
+begin
 wwv_flow_api.create_page_da_action(
  p_id=>wwv_flow_api.id(7902118582165321)
 ,p_event_id=>wwv_flow_api.id(7902070048165320)
@@ -13025,9 +13054,6 @@ wwv_flow_api.create_page_da_action(
 ,p_affected_elements_type=>'REGION'
 ,p_affected_region_id=>wwv_flow_api.id(6905012211297141)
 );
-end;
-/
-begin
 wwv_flow_api.create_page_process(
  p_id=>wwv_flow_api.id(6901689841297107)
 ,p_process_sequence=>10
@@ -13099,7 +13125,7 @@ wwv_flow_api.create_page(
 ,p_group_id=>wwv_flow_api.id(2746076255789759)
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200406200931'
+,p_last_upd_yyyymmddhh24miss=>'20200414201520'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(7900475706165304)
@@ -13291,7 +13317,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901185825165311)
 ,p_name=>'P10130_PREV_STEP_ID'
-,p_item_sequence=>60
+,p_item_sequence=>70
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_prompt=>'Previous Step'
 ,p_display_as=>'NATIVE_SELECT_LIST'
@@ -13312,7 +13338,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901229427165312)
 ,p_name=>'P10130_APP_WORKFLOW_ID'
-,p_item_sequence=>70
+,p_item_sequence=>80
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_display_as=>'NATIVE_HIDDEN'
 ,p_attribute_01=>'Y'
@@ -13321,7 +13347,7 @@ wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901367946165313)
 ,p_name=>'P10130_CREATE_USER'
 ,p_is_required=>true
-,p_item_sequence=>80
+,p_item_sequence=>90
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_item_default=>':APP_USER'
 ,p_item_default_type=>'PLSQL_EXPRESSION'
@@ -13341,7 +13367,7 @@ wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901464521165314)
 ,p_name=>'P10130_CREATE_DATE'
 ,p_is_required=>true
-,p_item_sequence=>90
+,p_item_sequence=>100
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_prompt=>'Create Date'
 ,p_display_as=>'NATIVE_DATE_PICKER'
@@ -13358,7 +13384,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901538112165315)
 ,p_name=>'P10130_UPDATE_USER'
-,p_item_sequence=>100
+,p_item_sequence=>110
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_prompt=>'Update User'
 ,p_display_as=>'NATIVE_TEXT_FIELD'
@@ -13376,7 +13402,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(7901672691165316)
 ,p_name=>'P10130_UPDATE_DATE'
-,p_item_sequence=>110
+,p_item_sequence=>120
 ,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
 ,p_prompt=>'Update Date'
 ,p_display_as=>'NATIVE_DATE_PICKER'
@@ -13388,6 +13414,29 @@ wwv_flow_api.create_page_item(
 ,p_attribute_04=>'button'
 ,p_attribute_05=>'N'
 ,p_attribute_07=>'NONE'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(10201650367936716)
+,p_name=>'P10130_EDIT_PAGE'
+,p_item_sequence=>60
+,p_item_plug_id=>wwv_flow_api.id(7900475706165304)
+,p_prompt=>'Edit Page'
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_named_lov=>'LOV_WORKFLOW_PAGES'
+,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ap.page_name || '' ('' || ap.page_id || '')'' as d,',
+'       ap.page_id as r',
+'  from apex_application_pages ap',
+' where (ap.page_group <> ''Administration'' or ap.page_group is null)',
+'   and ap.application_id = :APP_ID;',
+''))
+,p_lov_display_null=>'YES'
+,p_cHeight=>1
+,p_field_template=>wwv_flow_api.id(2719217614789676)
+,p_item_template_options=>'#DEFAULT#'
+,p_lov_display_extra=>'NO'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
 );
 wwv_flow_api.create_page_da_event(
  p_id=>wwv_flow_api.id(8001754422227851)

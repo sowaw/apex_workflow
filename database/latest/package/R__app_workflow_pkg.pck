@@ -103,14 +103,14 @@ create or replace package body app_workflow_pkg as
       apex_util.set_session_state('P0_NEXT_PAGE', l_row.next_page);
       -- NoFormat End
     
-      if l_row.prev_step_id is null then
-        l_target_url := apex_util.prepare_url(p_url => 'f?p='|| v('APP_ID') || ':' || l_row.next_page ||
-                                                       ':' || v('APP_SESSION') || ':::' || l_row.next_page);
+--      if l_row.prev_step_id is null then
+--        l_target_url := apex_util.prepare_url(p_url => 'f?p='|| v('APP_ID') || ':' || l_row.next_page ||
+--                                                       ':' || v('APP_SESSION') || ':::' || l_row.next_page);
       
 --        apex_util.redirect_url(p_url => l_target_url);
-      end if;
---    else
---      apex_util.set_session_state('P0_NEXT_PAGE', '');
+--      end if;
+    else
+      apex_util.set_session_state('P0_NEXT_PAGE', '');
     end if;
   
   exception
