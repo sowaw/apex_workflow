@@ -68,6 +68,7 @@ create or replace package body masterdata_pkg as
   
   apex_util.set_session_state('P102_DESCRIPTION', l_row.description);
   apex_util.set_session_state('P102_STATUS', l_row.status);
+  apex_util.set_session_state('P0_STATUS', l_row.status);
   
   exception
     when others then

@@ -1,0 +1,1 @@
+alter table APP_WORKFLOW_STEP add role varchar2(100);

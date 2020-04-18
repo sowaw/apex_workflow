@@ -5,6 +5,7 @@ create or replace package app_workflow_step_pkg as
                                        pi_status          in app_workflow_step.status%type default v('P10130_STATUS'),
                                        pi_next_page       in app_workflow_step.next_page%type default v('P10130_NEXT_PAGE'),
                                        pi_edit_page       in app_workflow_step.edit_page%type default v('P10130_EDIT_PAGE'),
+                                       pi_role            in app_workflow_step.role%type default v('P10130_ROLE'),
                                        pi_prev_step_id    in app_workflow_step.prev_step_id%type default v('P10130_PREV_STEP_ID'),
                                        pi_app_workflow_id in app_workflow_step.app_workflow_id%type default v('P10130_APP_WORKFLOW_ID'));
 
@@ -14,6 +15,7 @@ create or replace package app_workflow_step_pkg as
                                        pi_status          in app_workflow_step.status%type default v('P10130_STATUS'),
                                        pi_next_page       in app_workflow_step.next_page%type default v('P10130_NEXT_PAGE'),
                                        pi_edit_page       in app_workflow_step.edit_page%type default v('P10130_EDIT_PAGE'),
+                                       pi_role            in app_workflow_step.role%type default v('P10130_ROLE'),
                                        pi_prev_step_id    in app_workflow_step.prev_step_id%type default v('P10130_PREV_STEP_ID'),
                                        pi_app_workflow_id in app_workflow_step.app_workflow_id%type default v('P10130_APP_WORKFLOW_ID'));
 
@@ -32,6 +34,7 @@ create or replace package body app_workflow_step_pkg as
                                        pi_status          in app_workflow_step.status%type default v('P10130_STATUS'),
                                        pi_next_page       in app_workflow_step.next_page%type default v('P10130_NEXT_PAGE'),
                                        pi_edit_page       in app_workflow_step.edit_page%type default v('P10130_EDIT_PAGE'),
+                                       pi_role            in app_workflow_step.role%type default v('P10130_ROLE'),
                                        pi_prev_step_id    in app_workflow_step.prev_step_id%type default v('P10130_PREV_STEP_ID'),
                                        pi_app_workflow_id in app_workflow_step.app_workflow_id%type default v('P10130_APP_WORKFLOW_ID')) as
   begin
@@ -42,6 +45,7 @@ create or replace package body app_workflow_step_pkg as
        status,
        next_page,
        edit_page,
+       role,
        prev_step_id,
        app_workflow_id)
     values
@@ -50,6 +54,7 @@ create or replace package body app_workflow_step_pkg as
        pi_status,
        pi_next_page,
        pi_edit_page,
+       pi_role,
        pi_prev_step_id,
        pi_app_workflow_id);
   
@@ -65,6 +70,7 @@ create or replace package body app_workflow_step_pkg as
                                        pi_status          in app_workflow_step.status%type default v('P10130_STATUS'),
                                        pi_next_page       in app_workflow_step.next_page%type default v('P10130_NEXT_PAGE'),
                                        pi_edit_page       in app_workflow_step.edit_page%type default v('P10130_EDIT_PAGE'),
+                                       pi_role            in app_workflow_step.role%type default v('P10130_ROLE'),
                                        pi_prev_step_id    in app_workflow_step.prev_step_id%type default v('P10130_PREV_STEP_ID'),
                                        pi_app_workflow_id in app_workflow_step.app_workflow_id%type default v('P10130_APP_WORKFLOW_ID')) as
   begin
@@ -75,6 +81,7 @@ create or replace package body app_workflow_step_pkg as
            s.status          = pi_status,
            s.next_page       = pi_next_page,
            s.edit_page       = pi_edit_page,
+           s.role            = pi_role,
            s.prev_step_id    = pi_prev_step_id,
            s.app_workflow_id = pi_app_workflow_id
      where s.id = pi_id;
@@ -112,6 +119,7 @@ create or replace package body app_workflow_step_pkg as
     apex_util.set_session_state('P10130_STATUS', l_row.status);
     apex_util.set_session_state('P10130_NEXT_PAGE', l_row.next_page);
     apex_util.set_session_state('P10130_EDIT_PAGE', l_row.edit_page);
+    apex_util.set_session_state('P10130_ROLE', l_row.role);
     apex_util.set_session_state('P10130_PREV_STEP_ID', l_row.prev_step_id);
     apex_util.set_session_state('P10130_APP_WORKFLOW_ID', l_row.app_workflow_id);
     apex_util.set_session_state('P10130_CREATE_USER', l_row.create_user);

@@ -12,6 +12,19 @@ create or replace package app_workflow_pkg as
 
   procedure p_process_workflow(pi_request in varchar2 default v('REQUEST'));
 
+  function f_workflow_authorization(pi_page_id        in number default v('APP_PAGE_ID'),
+                                    pi_component_name in varchar2 default v('APP_COMPONENT_NAME'),
+                                    pi_component_type in varchar2 default v('APP_COMPONENT_TYPE'),
+                                    pi_component_id   in varchar2 default v('APP_COMPONENT_ID'),
+                                    pi_user_role      in varchar2 default v('P0_ROLE'),
+                                    pi_status         in varchar2 default v('P0_STATUS'))
+    return boolean;
+
+  procedure p_change_status(pi_table_name in varchar2,
+                            pi_id_col     in varchar2,
+                            pi_id         in number,
+                            pi_status     in varchar2 default v('P0_STATUS'));
+
 end app_workflow_pkg;
 /
 create or replace package body app_workflow_pkg as
@@ -98,19 +111,24 @@ create or replace package body app_workflow_pkg as
         from app_workflow_step s
        where s.request = pi_request;
     
+      logger.log(l_row.status);
+      logger.log(l_row.next_page);
+    
       -- NoFormat Start
       apex_util.set_session_state('P0_STATUS', l_row.status);
       apex_util.set_session_state('P0_NEXT_PAGE', l_row.next_page);
       -- NoFormat End
     
---      if l_row.prev_step_id is null then
---        l_target_url := apex_util.prepare_url(p_url => 'f?p='|| v('APP_ID') || ':' || l_row.next_page ||
---                                                       ':' || v('APP_SESSION') || ':::' || l_row.next_page);
-      
---        apex_util.redirect_url(p_url => l_target_url);
---      end if;
+      --      if l_row.prev_step_id is null then
+      --        l_target_url := apex_util.prepare_url(p_url => 'f?p='|| v('APP_ID') || ':' || l_row.next_page ||
+      --                                                       ':' || v('APP_SESSION') || ':::' || l_row.next_page);
+    
+      --        apex_util.redirect_url(p_url => l_target_url);
+      --      end if;
     else
+      -- NoFormat Start
       apex_util.set_session_state('P0_NEXT_PAGE', '');
+      -- NoFormat End
     end if;
   
   exception
@@ -119,4 +137,62 @@ create or replace package body app_workflow_pkg as
       raise;
   end p_process_workflow;
 
+  function f_workflow_authorization(pi_page_id        in number default v('APP_PAGE_ID'),
+                                    pi_component_name in varchar2 default v('APP_COMPONENT_NAME'),
+                                    pi_component_type in varchar2 default v('APP_COMPONENT_TYPE'),
+                                    pi_component_id   in varchar2 default v('APP_COMPONENT_ID'),
+                                    pi_user_role      in varchar2 default v('P0_ROLE'),
+                                    pi_status         in varchar2 default v('P0_STATUS'))
+    return boolean as
+    l_rowcount number := 0;
+  begin
+  
+    /*    
+       -- NoFormat Start
+       logger.log(pi_page_id, p_scope => 'workflow');
+       logger.log(pi_component_name, p_scope => 'workflow');
+       logger.log(pi_component_type, p_scope => 'workflow');
+       logger.log(pi_component_id, p_scope => 'workflow');
+       logger.log(pi_user_role, p_scope => 'workflow');
+       -- NoFormat End
+    */
+  
+    select count(1)
+      into l_rowcount
+      from app_workflow_step s
+     where s.request = pi_component_name
+       and s.role = pi_user_role
+       and s.status <> pi_status;
+  
+    if l_rowcount > 0 then
+      return true;
+    else
+      return false;
+    end if;
+  
+  exception
+    when others then
+      logger.log_error();
+      --return false;
+  end f_workflow_authorization;
+
+  procedure p_change_status(pi_table_name in varchar2,
+                            pi_id_col     in varchar2,
+                            pi_id         in number,
+                            pi_status     in varchar2 default v('P0_STATUS')) as
+    l_sql varchar2(4000);
+  
+  begin
+  
+    l_sql := 'update ' || pi_table_name || ' set status = ''' || pi_status || ''' where ' ||
+             pi_id_col || ' = ' || pi_id;
+  
+    execute immediate l_sql;
+  exception
+    when others then
+      logger.log_error();
+      raise;
+  end p_change_status;
+
 end app_workflow_pkg;
+/
