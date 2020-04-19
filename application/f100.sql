@@ -27,7 +27,7 @@ prompt APPLICATION 100 - Declarative Workflow
 -- Application Export:
 --   Application:     100
 --   Name:            Declarative Workflow
---   Date and Time:   17:55 Sobota Kwiecień 18, 2020
+--   Date and Time:   12:08 Niedziela Kwiecień 19, 2020
 --   Exported By:     WORKFLOW
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -35,7 +35,7 @@ prompt APPLICATION 100 - Declarative Workflow
 --       Items:                   34
 --       Processes:               23
 --       Regions:                 26
---       Buttons:                 23
+--       Buttons:                 25
 --       Dynamic Actions:          6
 --     Shared Components:
 --       Logic:
@@ -117,7 +117,7 @@ wwv_flow_api.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'Declarative Workflow'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200418175308'
+,p_last_upd_yyyymmddhh24miss=>'20200419120305'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -10949,7 +10949,7 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200418171102'
+,p_last_upd_yyyymmddhh24miss=>'20200419120104'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(7903952336165339)
@@ -11156,7 +11156,7 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'WSOWA'
-,p_last_upd_yyyymmddhh24miss=>'20200418175308'
+,p_last_upd_yyyymmddhh24miss=>'20200419120305'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(7903700725165337)
@@ -11243,7 +11243,7 @@ wwv_flow_api.create_page_button(
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(10203924354936739)
-,p_button_sequence=>50
+,p_button_sequence=>60
 ,p_button_plug_id=>wwv_flow_api.id(7904803649165348)
 ,p_button_name=>'BTN_WITHDRAW'
 ,p_button_action=>'SUBMIT'
@@ -11255,6 +11255,38 @@ wwv_flow_api.create_page_button(
 ,p_button_condition=>'P102_ID'
 ,p_button_condition_type=>'ITEM_IS_NOT_NULL'
 ,p_icon_css_classes=>'fa-thumbs-o-down'
+,p_security_scheme=>wwv_flow_api.id(12300609100954129)
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(10204018157936740)
+,p_button_sequence=>70
+,p_button_plug_id=>wwv_flow_api.id(7904803649165348)
+,p_button_name=>'BTN_SIGN_AS_REVIEWER'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft'
+,p_button_template_id=>wwv_flow_api.id(4400260178241631)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Sign as Reviewer'
+,p_button_position=>'REGION_TEMPLATE_CREATE'
+,p_button_condition=>'P102_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_icon_css_classes=>'fa-thumbs-o-up'
+,p_security_scheme=>wwv_flow_api.id(12300609100954129)
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(10204136011936741)
+,p_button_sequence=>80
+,p_button_plug_id=>wwv_flow_api.id(7904803649165348)
+,p_button_name=>'BTN_INACTIVATE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft'
+,p_button_template_id=>wwv_flow_api.id(4400260178241631)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Inactivate'
+,p_button_position=>'REGION_TEMPLATE_CREATE'
+,p_button_condition=>'P102_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_icon_css_classes=>'fa-window-close-o'
 ,p_security_scheme=>wwv_flow_api.id(12300609100954129)
 );
 wwv_flow_api.create_page_branch(
@@ -11343,9 +11375,12 @@ wwv_flow_api.create_page_process(
 ,p_process_name=>'Workflow Process'
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'app_workflow_pkg.p_process_workflow;',
+'',
+'if :REQUEST not in (''BTN_SAVE'', ''BTN_APPLY'') then',
 'app_workflow_pkg.p_change_status(pi_table_name => ''masterdata'',',
 '                                 pi_id_col     => ''id'',',
-'                                 pi_id         => :P102_ID);'))
+'                                 pi_id         => :P102_ID);',
+'end if;                                 '))
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 wwv_flow_api.create_page_process(

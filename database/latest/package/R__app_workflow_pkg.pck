@@ -157,12 +157,30 @@ create or replace package body app_workflow_pkg as
        -- NoFormat End
     */
   
+    /*  
+        select count(1)
+          into l_rowcount
+          from app_workflow_step s
+         where s.request = pi_component_name
+           and s.role = pi_user_role
+           and s.status <> pi_status;
+    */
+  
     select count(1)
       into l_rowcount
       from app_workflow_step s
-     where s.request = pi_component_name
+     where level = (select min(level)
+                      from app_workflow_step s
+                     where s.status = pi_status
+                     start with s.prev_step_id is null
+                    connect by prior s.id = s.prev_step_id) + 1
+       and s.prev_step_id = (select min(s.id)
+                               from app_workflow_step s
+                              where s.status = pi_status)
        and s.role = pi_user_role
-       and s.status <> pi_status;
+       and s.request = pi_component_name   
+     start with s.prev_step_id is null
+    connect by prior s.id = s.prev_step_id;
   
     if l_rowcount > 0 then
       return true;
