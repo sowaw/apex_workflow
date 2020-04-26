@@ -71,7 +71,24 @@ This project is dedicated for APEX applications that need to be flexible in term
     * Add workflow step and fill all field related to the particular one. 
     [![1.png](https://i.postimg.cc/wBkXbDLZ/1.png)](https://postimg.cc/Ny52K9Nk)
 
-4. _Edit Page_ property be used in workflows which assumes editing the business object on others page depending on its status or other requirements. In order to use this feature on your report and redirect user to the right page you can follow example listed below: 
+4. In Shared Components section create a new Authorization Scheme
+
+    * Name: **Workflow Authorization**
+    * Scheme Type: **PL/SQL Function Returning Boolean**
+    * PL/SQL Function Body:
+        ``` sql
+            return app_workflow_pkg.f_workflow_authorization(pi_page_id        => :APP_PAGE_ID,
+                                                             pi_component_name => :APP_COMPONENT_NAME,
+                                                             pi_component_type => :APP_COMPONENT_TYPE,
+                                                             pi_component_id   => :APP_COMPONENT_ID,
+                                                             pi_user_role      => :P0_ROLE);
+        ```
+    * Error message: **Workflow Authorization Error**
+    * Validate authorization scheme: **Always (No Caching) or Once per component**
+
+    > Every button included in workflow process should have this authorization scheme set. 
+
+5. _Edit Page_ property be used in workflows which assumes editing the business object on others page depending on its status or other requirements. In order to use this feature on your report and redirect user to the right page you can follow example listed below: 
     ```sql
         select '<a href="' || apex_util.prepare_url('f?p=&APP_ID.:' ||
                                                     app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) ||
