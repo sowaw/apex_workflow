@@ -3,7 +3,8 @@
 ## About
 This project is dedicated for APEX applications that need to be flexible in terms of workflow that meets the business needs. Based on prepared set of application pages, it is possible to follow the idea of **Citizen Development**. Using simple configuration pages, business analyst or other stakeholder can adjust behavior of the application easily. 
 
-Project assumes workflow configuration based on changing status of business object, where particular action causes page redirect from one to another. In addition, status can be changed only by user having necessary role.
+> Project assumes workflow configuration based on changing status of business object, where particular action causes page redirect from one to another. In addition, status can be changed only by user having necessary role. APEX Workflow uses configuration tables of available statuses, actions and allowed user roles.
+
 
 ---
 
@@ -46,7 +47,7 @@ Project assumes workflow configuration based on changing status of business obje
                                              pi_id         => :P102_ID);
         end if;                                 
       ```
-      Code listed above means that if any of application buttons were clicked, then do the change of the status of business objects - in the example, called _Masterdata_, where column responsible for primary key is called _ID_.
+      Code listed above means that if any of application workflow buttons were clicked, then do the change of the status of business objects - in the example, called _Masterdata_, where column responsible for primary key is called _ID_.
 
     * Page Branch 
       * Name: **Workflow Branch**  
@@ -57,3 +58,8 @@ Project assumes workflow configuration based on changing status of business obje
     > Non-workflow branches should include Server-side Condition **Item is NULL** - **P0_NEXT_PAGE**
 
     > Your data fetch processes executed on page load should set the **P0_STATUS** to the current status of your business object. 
+
+ 3. Configure workflow of your application. 
+    
+    * Go to **Administation** section, then select **Workflow Configuration** card.
+    * Create a new workflow by giving it a name as you want. 
