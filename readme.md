@@ -75,7 +75,7 @@ This project is dedicated for APEX applications that need to be flexible in term
     ```sql
         select '<a href="' || apex_util.prepare_url('f?p=&APP_ID.:' ||
                                                     app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) ||
-                                                    ':&APP_SESSION.::::P' ||app_workflow_step_pkg.f_get_edit_page       (pi_status => m.status) || '_ID:' || m.id) ||
+                                                    ':&APP_SESSION.::::P' ||app_workflow_step_pkg.f_get_edit_page (pi_status => m.status) || '_ID:' || m.id) ||
                '"><img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-page.png" class="apex-edit-page report-link-button"  title="Edit" alt="Edit">
                </a>' as link,
                m.id,
