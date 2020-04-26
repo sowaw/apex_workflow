@@ -39,7 +39,7 @@ This project is dedicated for APEX applications that need to be flexible in term
 
 2. Create APEX pages that will be used for workflow in you application. Every of them must have process and branch dedicated strictly for workflow: 
 
-    * Page Process 
+    * Page Process (the lowest sequcence number of it on the page level is mandatory!)
       * Name: **Workflow Process**  
       * Type: **PL/SQL Code**
       * Code: **app_workflow_pkg.p_process_workflow;**
@@ -61,7 +61,10 @@ This project is dedicated for APEX applications that need to be flexible in term
 
     > Non-workflow branches should include Server-side Condition **Item is NULL** - **P0_NEXT_PAGE**
 
-    > Your data fetch processes executed on page load should set the **P0_STATUS** to the current status of your business object. 
+    > Your data fetch processes executed on page load should set the **P0_STATUS** to the current status of your business object
+
+    > Your CRUD processes should get **P0_STATUS** item value for SQL Inserts and Updates 
+
 
  3. Configure workflow of your application. 
     
@@ -85,23 +88,25 @@ This project is dedicated for APEX applications that need to be flexible in term
         ```
     * Error message: **Workflow Authorization Error**
     * Validate authorization scheme: **Always (No Caching) or Once per component**
+    
     > Every button included in workflow process should have this authorization scheme set. 
 
 5. _Edit Page_ property be used in workflows which assumes editing the business object on others page depending on its status or other requirements. In order to use this feature on your report and redirect user to the right page you can follow example listed below: 
+
     ```sql
-        select '<a href="' || apex_util.prepare_url('f?p=&APP_ID.:' ||
-                                                    app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) ||
-                                                    ':&APP_SESSION.::::P' ||app_workflow_step_pkg.f_get_edit_page (pi_status => m.status) || '_ID:' || m.id) ||
-               '"><img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-page.png" class="apex-edit-page report-link-button"  title="Edit" alt="Edit">
-               </a>' as link,
-               m.id,
-               m.description,
-               m.status,
-               m.create_user,
-               m.create_date,
-               m.update_user,
-               m.update_date
-          from masterdata m;
+    select '<a href="' || apex_util.prepare_url('f?p=&APP_ID.:' ||
+                                                app_workflow_step_pkg.f_get_edit_page(pi_status => m.status) ||
+                                                ':&APP_SESSION.::::P' ||app_workflow_step_pkg.f_get_edit_page (pi_status => m.status) || '_ID:' || m.id) ||
+           '"><img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-page.png" class="apex-edit-page report-link-button"  title="Edit" alt="Edit">
+           </a>' as link,
+           m.id,
+           m.description,
+           m.status,
+           m.create_user,
+           m.create_date,
+           m.update_user,
+           m.update_date
+      from masterdata m;
     ```
 
     > To keep the previous step - next step relation, use _Preivous Step_ property to select which action is happening before step being currently configured. 
