@@ -69,7 +69,7 @@ This project is dedicated for APEX applications that need to be flexible in term
     * Create a new workflow by giving it a name as you want. 
     * In **Dictionaries Setup** provide names of actions, statuses and allowed user roles. 
     * Add workflow step and fill all field related to the particular one. 
-    ![Application screen](/images/1.png?raw=true)
+    [![1.png](https://i.postimg.cc/wBkXbDLZ/1.png)](https://postimg.cc/Ny52K9Nk)
 
 4. _Edit Page_ property be used in workflows which assumes editing the business object on others page depending on its status or other requirements. In order to use this feature on your report and redirect user to the right page you can follow example listed below: 
     ```sql
