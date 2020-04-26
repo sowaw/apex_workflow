@@ -77,15 +77,14 @@ This project is dedicated for APEX applications that need to be flexible in term
     * Scheme Type: **PL/SQL Function Returning Boolean**
     * PL/SQL Function Body:
         ``` sql
-            return app_workflow_pkg.f_workflow_authorization(pi_page_id        => :APP_PAGE_ID,
-                                                             pi_component_name => :APP_COMPONENT_NAME,
-                                                             pi_component_type => :APP_COMPONENT_TYPE,
-                                                             pi_component_id   => :APP_COMPONENT_ID,
-                                                             pi_user_role      => :P0_ROLE);
+        return app_workflow_pkg.f_workflow_authorization(pi_page_id        => :APP_PAGE_ID,
+                                                         pi_component_name => :APP_COMPONENT_NAME,
+                                                         pi_component_type => :APP_COMPONENT_TYPE,
+                                                         pi_component_id   => :APP_COMPONENT_ID,
+                                                         pi_user_role      => :P0_ROLE);
         ```
     * Error message: **Workflow Authorization Error**
     * Validate authorization scheme: **Always (No Caching) or Once per component**
-
     > Every button included in workflow process should have this authorization scheme set. 
 
 5. _Edit Page_ property be used in workflows which assumes editing the business object on others page depending on its status or other requirements. In order to use this feature on your report and redirect user to the right page you can follow example listed below: 
