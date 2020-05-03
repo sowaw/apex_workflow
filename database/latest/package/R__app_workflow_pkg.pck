@@ -118,17 +118,8 @@ create or replace package body app_workflow_pkg as
       apex_util.set_session_state('P0_STATUS', l_row.status);
       apex_util.set_session_state('P0_NEXT_PAGE', l_row.next_page);
       -- NoFormat End
-    
-      --      if l_row.prev_step_id is null then
-      --        l_target_url := apex_util.prepare_url(p_url => 'f?p='|| v('APP_ID') || ':' || l_row.next_page ||
-      --                                                       ':' || v('APP_SESSION') || ':::' || l_row.next_page);
-    
-      --        apex_util.redirect_url(p_url => l_target_url);
-      --      end if;
     else
-      -- NoFormat Start
       apex_util.set_session_state('P0_NEXT_PAGE', '');
-      -- NoFormat End
     end if;
   
   exception
@@ -146,26 +137,6 @@ create or replace package body app_workflow_pkg as
     return boolean as
     l_rowcount number := 0;
   begin
-  
-    /*    
-       -- NoFormat Start
-       logger.log(pi_page_id, p_scope => 'workflow');
-       logger.log(pi_component_name, p_scope => 'workflow');
-       logger.log(pi_component_type, p_scope => 'workflow');
-       logger.log(pi_component_id, p_scope => 'workflow');
-       logger.log(pi_user_role, p_scope => 'workflow');
-       -- NoFormat End
-    */
-  
-    /*  
-        select count(1)
-          into l_rowcount
-          from app_workflow_step s
-         where s.request = pi_component_name
-           and s.role = pi_user_role
-           and s.status <> pi_status;
-    */
-  
     select count(1)
       into l_rowcount
       from app_workflow_step s
@@ -191,7 +162,7 @@ create or replace package body app_workflow_pkg as
   exception
     when others then
       logger.log_error();
-      --return false;
+      return false;
   end f_workflow_authorization;
 
   procedure p_change_status(pi_table_name in varchar2,

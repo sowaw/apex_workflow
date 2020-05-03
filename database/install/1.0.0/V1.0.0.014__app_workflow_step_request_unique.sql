@@ -1,0 +1,2 @@
+alter table APP_WORKFLOW_STEP
+  add constraint APP_WORKFLOW_STEP_REQUEST_UK unique (REQUEST, APP_WORKFLOW_ID);

@@ -1,1 +1,0 @@
-alter table MASTERDATA add description VARCHAR2(100) not null;

@@ -11,12 +11,13 @@ This project is dedicated for APEX applications that need to be flexible in term
 ## Prerequisites
 * do not use **Administration** page group for pages of your application - it is reserved for app administration pages, including **Workflow Configuration** module
 * your application is allowed to implement one workflow (it refers to version 1.0.0)
-* your workflow pages must have unique button names in the whole set 
+* your workflow pages must have unique button names (not labels) in the whole set 
+* PL/SQL packages use Logger functionalities. Make sure that your target schema has grants to Logger objects and synonyms were created. LOGGER schema name is expected
 * implemented engine-like workflow assumes existing following APEX items of **Hidden** type residing on **Page 0**:
    
    1. P0_STATUS
    2. P0_NEXT_PAGE
-   3. P0_ROLE
+   3. P0_ROLE - set this item using your role management mechanism
 
 ---
 
