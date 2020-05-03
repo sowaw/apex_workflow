@@ -36,7 +36,7 @@ This project is dedicated for APEX applications that need to be flexible in term
 
 ## How To Use 
 
-1. Import application file into your APEX workspace, including Supporting Objects.
+1. Import application file **application/f100_sup_obj.sql** into your APEX workspace, including Supporting Objects.
 
 2. Create APEX pages that will be used for workflow in you application. Every of them must have process and branch dedicated strictly for workflow: 
 
